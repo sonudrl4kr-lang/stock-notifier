@@ -1,0 +1,49 @@
+name: Scheduled Telegram Notifier
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # हर 5 मिनट पर run होगा
+  workflow_dispatch:         # यह जोड़ने से GitHub UI से manual run भी कर सकते हैं
+
+permissions:
+  contents: write
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: Run notifier (one-shot)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python telegram_market_notifier_once.py
+
+      - name: Commit seen.json if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -f seen.json ]; then
+            git add seen.json
+            if ! git diff --staged --quiet; then
+              git commit -m "Update seen.json (auto) [skip ci]" || true
+              git push origin HEAD:main
+            else
+              echo "seen.json not changed"
+            fi
+          else
+            echo "seen.json not found; skipping commit"
+          fi
