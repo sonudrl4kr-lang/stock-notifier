@@ -2,7 +2,7 @@ name: Scheduled Telegram Notifier
 
 on:
   schedule:
-    - cron: '*/5 * * * *'   # हर 5 मिनट पर run होगा
+    - cron: '30 * * * *'   # हर 5 मिनट पर run होगा
   workflow_dispatch:         # यह जोड़ने से GitHub UI से manual run भी कर सकते हैं
 
 permissions:
