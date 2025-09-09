@@ -17,7 +17,7 @@ SEEN_DB = os.getenv("SEEN_DB", "seen.json")
 MAX_PER_RUN = int(os.getenv("MAX_PER_RUN", "8"))
 SUMMARY_WORDS = int(os.getenv("SUMMARY_WORDS", "18"))
 TRANSLATE_TARGET = os.getenv("TRANSLATE_TARGET", "hi")
-TICKERS = os.getenv("TICKERS", "RELIANCE.NS,AAPL,TSLA").split(",")  # Stock tickers from env, default to some stocks
+TICKERS = os.getenv("TICKERS", "RELIANCE.NS,SBIN.NS,AAPL,TSLA").split(",")  # Stock tickers from env, default to some stocks
 
 # Keywords for filtering
 DEFAULT_KEYWORDS = [
